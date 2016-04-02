@@ -1,6 +1,7 @@
 import csv
 import collections
 import os
+import math
 
 array= []
 results= {}
@@ -11,8 +12,20 @@ with open('result.csv') as result:
 	for row in reader:
 		results = {}
 		i=i+1
-		se = row['se']
-		results["Requested memory"] = se  
+		v = int(round(float(row['se'])))
+		original = v
+		v=v-1
+		v |= v >> 1
+		v |= v >> 2
+		v |= v >> 4
+		v |= v >> 8
+		v |= v >> 16
+		v=v+1
+		lowest = v
+		lowest = lowest >> 1
+		if ((original - lowest) < (v - original)):
+			v = lowest
+		results["Requested memory"] = v  
 		toCSV[i] = results
 
 
@@ -23,7 +36,7 @@ with open('result1.csv') as result:
 	for row in reader:
 		results = {}
 		i=i+1
-		se = row['se']
+		se = int(round(float(row['se'])))
 		toCSV[i]["Allocation Processors"] = se
 		
 
